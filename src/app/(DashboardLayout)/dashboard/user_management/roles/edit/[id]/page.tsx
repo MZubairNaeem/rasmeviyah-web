@@ -101,7 +101,7 @@ const EditRole = () => {
           await dispatch(
             editRole({
               roleId,
-              rolename: roleName,
+              roleName: roleName,
               description: roledescription,
               selectedPermissions,
             })
@@ -127,7 +127,7 @@ const EditRole = () => {
             setDescription(role.description);
             dispatch(
               setSelectedPermissions(
-                role.role_has_permissions.map((p) => ({
+                role.roleHasPermissions.map((p) => ({
                   id: p.permissions.id,
                   name: p.permissions.name,
                 }))

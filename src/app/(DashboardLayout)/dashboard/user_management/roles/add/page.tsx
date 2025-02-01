@@ -97,7 +97,7 @@ const addRole = () => {
       try {
         await dispatch(
           saveRole({
-            rolename: roleName,
+            roleName: roleName,
             description: roledescription,
             selectedPermissions,
           })

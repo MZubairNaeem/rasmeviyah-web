@@ -1,40 +1,21 @@
+import CustomFormLabel from "@/app/(DashboardLayout)/components/forms/theme-elements/CustomFormLabel";
+import CustomTextField from "@/app/(DashboardLayout)/components/forms/theme-elements/CustomTextField";
+import { loginType } from "@/app/(DashboardLayout)/types/auth/auth";
+import { supabase } from "@/store/SupabaseClient";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Divider from "@mui/material/Divider";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormGroup from "@mui/material/FormGroup";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import Link from "next/link";
-import { loginType } from "@/app/(DashboardLayout)/types/auth/auth";
-import CustomCheckbox from "@/app/(DashboardLayout)/components/forms/theme-elements/CustomCheckbox";
-import CustomTextField from "@/app/(DashboardLayout)/components/forms/theme-elements/CustomTextField";
-import CustomFormLabel from "@/app/(DashboardLayout)/components/forms/theme-elements/CustomFormLabel";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { supabase } from "@/store/supabaseClient";
-import { toast } from "react-toastify";
 import Cookie from "js-cookie";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 interface User {
   id: string;
   name: string;
   email: string;
-}
-
-// Supabase authentication response interface
-interface SupabaseAuthResponse {
-  data: {
-    user: {
-      id: string;
-    };
-    session: {
-      access_token: string;
-    };
-  } | null;
-  error: {
-    message: string;
-  } | null;
 }
 
 // Supabase user query response interface
@@ -58,9 +39,24 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
     setPassword("");
   }, []);
 
-  const handleLogin = async () => {
-    setLoading(true);
+  const validateEmail = (email: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
 
+  const handleLogin = async () => {
+    
+    if(!email || !password){
+      setError("*")
+      return;
+    }
+    if (!validateEmail(email)) {
+      toast.error("Invalid email format");
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true);
     try {
       // Sign in with email and password
       const { data, error } = await supabase.auth.signInWithPassword({
@@ -98,10 +94,11 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
         toast.success("Login Successful");
 
         // Navigate to the dashboard
-        router.push("/");
+        router.push("/dashboard");
       }
     } catch (error: any) {
       toast.error(error.message);
+      // setError(error.message);
     } finally {
       setLoading(false);
     }
@@ -119,17 +116,30 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
 
       <Stack>
         <Box>
-          <CustomFormLabel htmlFor="username">Username</CustomFormLabel>
+          <CustomFormLabel htmlFor="username">Email 
+            {error && !email &&(
+          <Typography component={"span"}
+           color="error" variant="body1" fontSize={20} mx={1}>
+            {error}
+          </Typography>
+        )}</CustomFormLabel>
           <CustomTextField
-            id="username"
+            id="Email"
             variant="outlined"
             fullWidth
             value={email}
             onChange={(e: any) => setEmail(e.target.value)}
           />
+          
         </Box>
         <Box>
-          <CustomFormLabel htmlFor="password">Password</CustomFormLabel>
+          <CustomFormLabel htmlFor="password">Password
+          {error && !password &&(
+          <Typography component={"span"} color="error" variant="body1" fontSize={20} mx={1}>
+            {error}
+          </Typography>
+        )}
+          </CustomFormLabel>
           <CustomTextField
             id="password"
             type="password"
@@ -138,6 +148,7 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
             value={password}
             onChange={(e: any) => setPassword(e.target.value)}
           />
+         
         </Box>
         <Stack justifyContent="end" direction="row" alignItems="center" my={2}>
           <Typography

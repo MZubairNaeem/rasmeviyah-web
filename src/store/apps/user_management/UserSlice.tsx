@@ -1,5 +1,5 @@
 
-import { supabase } from '@/store/supabaseClient';
+import { supabase } from '@/store/SupabaseClient';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Draft } from 'immer';
 import { toast } from 'react-toastify';
@@ -14,15 +14,15 @@ export interface User {
     id: string;
     name: string;
     email: string;
-    role_id: string;
+    roleId: string;
     roles: Role;
 }
 
-interface UserState {
+interface userState {
     userId: string | null;
     userName: string;
     email: string;
-    role_id: string | null;
+    roleId: string | null;
     user: User | null;
     updateUserId: string | null;
     users: User[];
@@ -31,13 +31,13 @@ interface UserState {
 }
 
 // Initial state
-const initialState: UserState = {
+const initialState: userState = {
     user: null,
     updateUserId: null,
     userId: null,
     userName: '',
     email: '',
-    role_id: null,
+    roleId: null,
     users: [],
     status: 'idle',
     error: null,
@@ -45,8 +45,8 @@ const initialState: UserState = {
 
 export const addUser = createAsyncThunk<
     User,
-    { username: string; email: string; password: string; role_id: string }
->('users/addUser', async ({ username, email, password, role_id }) => {
+    { userName: string; email: string; password: string; roleId: string }
+>('users/addUser', async ({ userName, email, password, roleId }) => {
     let { data: authData, error: authError } = await supabase.auth.signUp({
         email: email,
         password: password,
@@ -57,7 +57,7 @@ export const addUser = createAsyncThunk<
     }
     const { error: insertionError, data: userData } = await supabase
         .from('users')
-        .insert({ id: authData?.user?.id, name: username, email: email, role_id: role_id })
+        .insert({ id: authData?.user?.id, name: userName, email: email, role_id: roleId })
         .select(`*, roles (name)`);
 
     if (insertionError) {
@@ -104,8 +104,8 @@ export const deleteUser = createAsyncThunk<string, string>(
 
 export const editUser = createAsyncThunk<
     User,
-    { userID: string; username: string; email: string; password: string; role_id: string }
->('users/editUser', async ({ userID, username, email, password ,role_id }) => {
+    { userID: string; userName: string; email: string; password: string; roleId: string }
+>('users/editUser', async ({ userID, userName, email, password ,roleId }) => {
     let { data: authData, error: authError } = await supabase.auth.updateUser({
         email: email,
         password: password,
@@ -116,7 +116,7 @@ export const editUser = createAsyncThunk<
     }
     const { error: insertionError, data: updateUser } = await supabase
         .from('users')
-        .update({id: authData?.user?.id, name: username, email: email, role_id: role_id })
+        .update({id: authData?.user?.id, name: userName, email: email, role_id: roleId })
         .eq('id', userID)
         .select(`*, roles (name)`);
 
@@ -134,7 +134,7 @@ const userSlice = createSlice({
     initialState,
     reducers: {
         setSelectedRole: (state, action: PayloadAction<string>) => {
-            state.role_id = action.payload;
+            state.roleId = action.payload;
         },
     },
     extraReducers: (builder) => {
@@ -158,12 +158,12 @@ const userSlice = createSlice({
             })
             .addCase(
                 fetchUser.fulfilled,
-                (state: Draft<UserState>, action: PayloadAction<User[]>) => {
+                (state: Draft<userState>, action: PayloadAction<User[]>) => {
                     state.status = 'succeeded';
                     state.users = action.payload;
                 }
             )
-            .addCase(fetchUser.rejected, (state: Draft<UserState>, action) => {
+            .addCase(fetchUser.rejected, (state: Draft<userState>, action) => {
                 state.status = 'failed';
                 state.error = action.error.message ?? null;
             })
@@ -173,14 +173,14 @@ const userSlice = createSlice({
             })
             .addCase(
                 deleteUser.fulfilled,
-                (state: Draft<UserState>, action: PayloadAction<string>) => {
+                (state: Draft<userState>, action: PayloadAction<string>) => {
                     state.status = 'succeeded';
                     state.users = state.users.filter(
                         (user) => user.id !== action.payload
                     );
                 }
             )
-            .addCase(deleteUser.rejected, (state: Draft<UserState>, action) => {
+            .addCase(deleteUser.rejected, (state: Draft<userState>, action) => {
                 state.status = 'failed';
                 state.error = action.payload ? action.payload.toString() : null;
             })

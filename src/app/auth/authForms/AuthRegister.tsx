@@ -1,17 +1,14 @@
+import CustomFormLabel from "@/app/(DashboardLayout)/components/forms/theme-elements/CustomFormLabel";
+import CustomTextField from "@/app/(DashboardLayout)/components/forms/theme-elements/CustomTextField";
+import { registerType } from "@/app/(DashboardLayout)/types/auth/auth";
+import { supabase } from "@/store/SupabaseClient";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
-import Link from "next/link";
-import CustomTextField from "@/app/(DashboardLayout)/components/forms/theme-elements/CustomTextField";
-import CustomFormLabel from "@/app/(DashboardLayout)/components/forms/theme-elements/CustomFormLabel";
 import { Stack } from "@mui/system";
-import { registerType } from "@/app/(DashboardLayout)/types/auth/auth";
-import AuthSocialButtons from "./AuthSocialButtons";
 import { useRouter } from "next/navigation";
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { toast } from "react-toastify";
-import { supabase } from "@/store/supabaseClient";
 
 interface UserCredentials {
   name: string;
@@ -133,7 +130,7 @@ const AuthRegister = ({ title, subtitle, subtext }: registerType) => {
             fullWidth
             onChange={handleChange}
           />
-          <CustomFormLabel htmlFor="email">Email Adddress</CustomFormLabel>
+          <CustomFormLabel htmlFor="email">Email Address</CustomFormLabel>
           <CustomTextField
             id="email"
             variant="outlined"

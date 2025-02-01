@@ -1,5 +1,7 @@
 
+import { deleteUser, fetchUser, Role, User } from '@/store/apps/user_management/UserSlice';
 import { useDispatch, useSelector } from '@/store/hooks';
+import { RootState } from '@/store/store';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button/Button';
 import IconButton from '@mui/material/IconButton';
@@ -20,11 +22,9 @@ import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { visuallyHidden } from '@mui/utils';
 import { IconEdit, IconSearch, IconTrash } from '@tabler/icons-react';
-import * as React from 'react';
-import { deleteUser, fetchUser, Role, User } from '@/store/apps/user_management/UserSlice';
-import { RootState } from '@/store/store';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import useAuth from '../../../../../auth/useAuth/page';
@@ -83,14 +83,14 @@ const headCells: readonly HeadCell[] = [
     label: 'Name',
   },
   {
-    id: 'pname',
+    id: 'email',
     numeric: false,
     disablePadding: false,
     label: 'Email',
   },
 
   {
-    id: 'status',
+    id: 'role',
     numeric: false,
     disablePadding: false,
     label: 'Role',
@@ -114,11 +114,8 @@ interface EnhancedTableProps {
 
 function EnhancedTableHead(props: EnhancedTableProps) {
   const {
-    onSelectAllClick,
     order,
     orderBy,
-    numSelected,
-    rowCount,
     onRequestSort,
   } = props;
   const createSortHandler =
@@ -173,7 +170,7 @@ interface EnhancedTableToolbarProps {
 }
 
 const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
-  const { numSelected, handleSearch, search } = props;
+  const { handleSearch, search } = props;
 
   return (
     <Toolbar>
@@ -265,26 +262,7 @@ const UsersTableList = () => {
     setSelected([]);
   };
 
-  // This is for the single row sleect
-  const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected: readonly string[] = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
-
-    setSelected(newSelected);
-  };
+ 
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -297,21 +275,11 @@ const UsersTableList = () => {
     setPage(0);
   };
 
-  const handleChangeDense = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setDense(event.target.checked);
-  };
-
-  const isSelected = (name: string) => selected.indexOf(name) !== -1;
-
-  // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   const theme = useTheme();
   const borderColor = theme.palette.divider;
 
   const status = useSelector((state: RootState) => state.UserReducer.status);
-  const error = useSelector((state: RootState) => state.UserReducer.error);
 
   useEffect(() => {
     setLoading(true);

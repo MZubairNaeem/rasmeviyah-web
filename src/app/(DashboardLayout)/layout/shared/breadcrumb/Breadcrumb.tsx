@@ -6,7 +6,7 @@ import { Theme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import NextLink from "next/link";
 
-import breadcrumbImg from "public/images/breadcrumb/ChatBc.png";
+import breadcrumbImg from "../../../../../../public/images/breadcrumb/ChatBc.png";
 import { IconCircle } from "@tabler/icons-react";
 import Image from "next/image";
 

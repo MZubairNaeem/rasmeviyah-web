@@ -1,9 +1,9 @@
 
-import { supabase } from '@/store/supabaseClient';
+import { supabase } from '@/store/SupabaseClient';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Draft } from 'immer';
 
-interface SelectedPermission {
+interface selectedPermission {
   id: string;
   name: string;
 }
@@ -19,7 +19,7 @@ export interface Permissions {
   created_at: string;
 }
 
-export interface RoleHasPermission {
+export interface roleHasPermission {
   permissions: Permissions;
 }
 
@@ -27,16 +27,16 @@ export interface Roles {
   id: string;
   name: string;
   description: string;
-  created_at: string;
-  role_has_permissions: RoleHasPermission[];
+  roleHasPermissions: roleHasPermission[];
+  createdAt: string;
 }
 
-interface RoleState {
-  rolename: string;
+interface roleState {
+  roleName: string;
   description: string;
   roleId: string | null;
   role: Role[];
-  selectedPermissions: SelectedPermission[];
+  selectedPermissions: selectedPermission[];
   permissions: Permissions[];
   rolePermissions: Roles[];
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
@@ -44,8 +44,8 @@ interface RoleState {
 }
 
 // Initial state
-const initialState: RoleState = {
-  rolename: '',
+const initialState: roleState = {
+  roleName: '',
   description: '',
   roleId: null,
   role: [],
@@ -59,15 +59,15 @@ const initialState: RoleState = {
 export const saveRole = createAsyncThunk<
   Roles,
   {
-    rolename: string;
+    roleName: string;
     description: string;
-    selectedPermissions: SelectedPermission[];
+    selectedPermissions: selectedPermission[];
   }
->('roles/saveRole', async ({ rolename, description, selectedPermissions }) => {
+>('roles/saveRole', async ({ roleName, description, selectedPermissions }) => {
   // Insert role
   const { data: role, error: roleError } = await supabase
     .from('roles')
-    .insert([{ name: rolename, description: description }])
+    .insert([{ name: roleName, description: description }])
     .select('*');
   if (roleError) {
     throw new Error(roleError.message);
@@ -108,12 +108,13 @@ export const saveRole = createAsyncThunk<
   }
 
   const rolehaspermissionId = role_permission[0]?.id;
+
   const newRole: Roles = {
     id: roleId,
-    name: rolename,
+    name: roleName,
     description: description,
-    created_at: role[0]?.created_at,
-    role_has_permissions:
+    createdAt: role[0]?.created_at,
+    roleHasPermissions:
       role_permission.map((permission) => ({
         permissions: {
           id: permission.id,
@@ -121,7 +122,6 @@ export const saveRole = createAsyncThunk<
             permissions.find(
               (p: Permissions) => p.id === permission.permission_id
             )?.name || '',
-          business_type_id: null,
           created_at: '',
         },
       })) || [],
@@ -176,18 +176,18 @@ export const editRole = createAsyncThunk<
   Roles,
   {
     roleId: string;
-    rolename: string;
+    roleName: string;
     description: string;
-    selectedPermissions: SelectedPermission[];
+    selectedPermissions: selectedPermission[];
   }
 >(
   'roles/editRole',
-  async ({ roleId, rolename, description, selectedPermissions }) => {
+  async ({ roleId, roleName, description, selectedPermissions }) => {
     // Update the role details (name, description)
     const { data: updatedRole, error: updateRoleError } = await supabase
       .from('roles')
       .update({
-        name: rolename,
+        name: roleName,
         description: description,
       })
       .eq('id', roleId)
@@ -259,10 +259,10 @@ export const editRole = createAsyncThunk<
 
     const updatedRoleData: Roles = {
       id: updatedRoleId,
-      name: rolename,
+      name: roleName,
       description: description,
-      created_at: updatedRole[0]?.created_at || '',
-      role_has_permissions: selectedPermissions.map((permission) => ({
+      createdAt: updatedRole[0]?.created_at || '',
+      roleHasPermissions: selectedPermissions.map((permission) => ({
         permissions: {
           id: permission.id,
           name: allPermissions.find((p) => p.id === permission.id)?.name || '',
@@ -282,7 +282,7 @@ const roleSlice = createSlice({
   reducers: {
     setSelectedPermissions: (
       state,
-      action: PayloadAction<SelectedPermission[]>
+      action: PayloadAction<selectedPermission[]>
     ) => {
       state.selectedPermissions = action.payload;
     },
@@ -308,12 +308,12 @@ const roleSlice = createSlice({
       })
       .addCase(
         fetchRole.fulfilled,
-        (state: Draft<RoleState>, action: PayloadAction<Roles[]>) => {
+        (state: Draft<roleState>, action: PayloadAction<Roles[]>) => {
           state.status = 'succeeded';
           state.rolePermissions = action.payload;
         }
       )
-      .addCase(fetchRole.rejected, (state: Draft<RoleState>, action) => {
+      .addCase(fetchRole.rejected, (state: Draft<roleState>, action) => {
         state.status = 'failed';
         state.error = action.error.message ?? null;
       })
@@ -323,14 +323,14 @@ const roleSlice = createSlice({
       })
       .addCase(
         deleteRole.fulfilled,
-        (state: Draft<RoleState>, action: PayloadAction<string>) => {
+        (state: Draft<roleState>, action: PayloadAction<string>) => {
           state.status = 'succeeded';
           state.rolePermissions = state.rolePermissions.filter(
             (role) => role.id !== action.payload
           );
         }
       )
-      .addCase(deleteRole.rejected, (state: Draft<RoleState>, action) => {
+      .addCase(deleteRole.rejected, (state: Draft<roleState>, action) => {
         state.status = 'failed';
         state.error = action.payload ? action.payload.toString() : null;
       })

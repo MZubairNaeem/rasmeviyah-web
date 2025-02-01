@@ -4,7 +4,7 @@ import { Box } from '@mui/material';
 import Breadcrumb from '@/app/(DashboardLayout)/layout/shared/breadcrumb/Breadcrumb';
 import PageContainer from '@/app/(DashboardLayout)/components/container/PageContainer';
 import RolesTableList from './components/RolesTableList';
-// import withAuth from '@/app/auth/withAuth/withAuth';
+import useAuth from '../../../../auth/useAuth/page'
 
 const BCrumb = [
   {
@@ -29,4 +29,4 @@ const RolesList = () => {
   );
 };
 
-export default RolesList;
+export default useAuth(RolesList);

@@ -53,7 +53,6 @@ const AddUser = () => {
     (state: RootState) => state.RoleReducer.rolePermissions
   );
   const status = useSelector((state: RootState) => state.RoleReducer.status);
-  const userid = useSelector((state: RootState) => state.UserReducer.userId);
   const error = useSelector((state: RootState) => state.UserReducer.error);
   
 
@@ -112,9 +111,9 @@ const AddUser = () => {
             editUser({
               userID,
               password: password,
-              username: userName,
+              userName: userName,
               email: email,
-              role_id: userRole,
+              roleId: userRole,
             })
           ).unwrap();
           if (result) {

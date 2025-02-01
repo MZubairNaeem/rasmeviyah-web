@@ -1,9 +1,9 @@
 
 "use client";
-import { useRouter } from 'next/navigation';
-import { useEffect, useState, ComponentType } from 'react';
+import { supabase } from '@/store/SupabaseClient';
 import { Session } from '@supabase/supabase-js';
-import { supabase } from '@/store/supabaseClient';
+import { useRouter } from 'next/navigation';
+import { ComponentType, useEffect, useState } from 'react';
 
 const withAuth = <P extends object>(WrappedComponent: ComponentType<P>) => {
   return (props: P) => {

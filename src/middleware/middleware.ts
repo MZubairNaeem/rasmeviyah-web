@@ -1,7 +1,6 @@
 
+import { supabase } from '@/store/SupabaseClient';
 import { NextRequest, NextResponse } from 'next/server';
-import { User } from '@supabase/supabase-js';
-import { supabase } from '@/store/supabaseClient';
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;

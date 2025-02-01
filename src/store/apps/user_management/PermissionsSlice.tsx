@@ -1,5 +1,5 @@
 
-import { supabase } from '@/store/supabaseClient';
+import { supabase } from '@/store/SupabaseClient';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Draft } from 'immer';
 
@@ -9,14 +9,14 @@ interface Permission {
     name: string;
   }
 
-  interface PermissionState {
+  interface permissionState {
     permissions: Permission[];
     status: 'idle' | 'loading' | 'succeeded' | 'failed';
     error: string | null;
   }
   
   // Initial state
-  const initialState: PermissionState = {
+  const initialState: permissionState = {
     permissions: [],
     status: 'idle',
     error: null,
@@ -45,14 +45,14 @@ interface Permission {
         })
         .addCase(
           fetchPermissions.fulfilled,
-          (state: Draft<PermissionState>, action: PayloadAction<Permission[]>) => {
+          (state: Draft<permissionState>, action: PayloadAction<Permission[]>) => {
             state.status = 'succeeded';
             state.permissions = action.payload;
           }
         )
         .addCase(
           fetchPermissions.rejected,
-          (state: Draft<PermissionState>, action) => {
+          (state: Draft<permissionState>, action) => {
             state.status = 'failed';
             state.error = action.error.message ?? null;
           }

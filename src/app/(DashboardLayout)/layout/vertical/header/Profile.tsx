@@ -1,5 +1,3 @@
-import React, { useState } from 'react';
-import Link from 'next/link';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -7,15 +5,17 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import Typography from '@mui/material/Typography';
+import Link from 'next/link';
+import { useState } from 'react';
 import * as dropdownData from './data';
 
-import { IconMail } from '@tabler/icons-react';
+import { supabase } from '@/store/SupabaseClient';
+import CircularProgress from '@mui/material/CircularProgress/CircularProgress';
 import { Stack } from '@mui/system';
+import { IconMail } from '@tabler/icons-react';
 import Image from 'next/image';
-import { supabase } from '@/store/supabaseClient';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
-import CircularProgress from '@mui/material/CircularProgress/CircularProgress';
 
 
 const Profile = () => {

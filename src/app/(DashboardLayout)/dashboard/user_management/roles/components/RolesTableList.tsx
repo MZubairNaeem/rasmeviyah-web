@@ -2,7 +2,7 @@
 import {
   deleteRole,
   fetchRole,
-  RoleHasPermission,
+  roleHasPermission,
   Roles,
 } from '@/store/apps/user_management/RoleManagmentSlice';
 import { useDispatch, useSelector } from '@/store/hooks';
@@ -98,14 +98,14 @@ const headCells: readonly HeadCell[] = [
     label: 'Name',
   },
   {
-    id: 'pname',
+    id: 'description',
     numeric: false,
     disablePadding: false,
     label: 'Description',
   },
 
   {
-    id: 'status',
+    id: 'permissions',
     numeric: false,
     disablePadding: false,
     label: 'Permissions',
@@ -129,11 +129,8 @@ interface EnhancedTableProps {
 
 function EnhancedTableHead(props: EnhancedTableProps) {
   const {
-    onSelectAllClick,
     order,
     orderBy,
-    numSelected,
-    rowCount,
     onRequestSort,
   } = props;
   const createSortHandler =
@@ -188,7 +185,7 @@ interface EnhancedTableToolbarProps {
 }
 
 const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
-  const { numSelected, handleSearch, search } = props;
+  const {  handleSearch, search } = props;
 
   return (
     <Toolbar>
@@ -280,25 +277,7 @@ const RolesTableList = () => {
   };
 
   // This is for the single row sleect
-  const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected: readonly string[] = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
-
-    setSelected(newSelected);
-  };
+  
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -311,35 +290,22 @@ const RolesTableList = () => {
     setPage(0);
   };
 
-  const handleChangeDense = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setDense(event.target.checked);
-  };
-
-  const isSelected = (name: string) => selected.indexOf(name) !== -1;
-
-  // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+  
 
   const theme = useTheme();
   const borderColor = theme.palette.divider;
 
   // fetch role_has_permissions & roles
   const status = useSelector((state: RootState) => state.RoleReducer.status);
-  const error = useSelector((state: RootState) => state.RoleReducer.error);
 
   const [showDrawer2, setShowDrawer2] = useState<string | null>(null);
   const [showDrawer1, setShowDrawer1] = useState<string | null>(null);
 
-  const [loading, setLoading] = useState(false);
 
   const handleDrawerClose1 = () => {
     setShowDrawer1(null);
   };
-  const handleOpenDialog = (roleId: string) => {
-    setShowDrawer2(roleId);
-  };
-
+ 
   const handleDrawerClose2 = () => {
     setShowDrawer2(null);
   };
@@ -545,7 +511,7 @@ const RolesTableList = () => {
                                 ) : (
                                   Array.isArray(role.role_has_permissions) &&
                                   role.role_has_permissions.map(
-                                    (permission: RoleHasPermission) => (
+                                    (permission: roleHasPermission) => (
                                       <Typography
                                         color="textSecondary"
                                         variant="subtitle2"

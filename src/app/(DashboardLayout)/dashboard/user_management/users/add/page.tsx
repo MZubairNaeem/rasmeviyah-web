@@ -76,9 +76,9 @@ const AddUser = () => {
       try {
         const result = await dispatch(
           addUser({
-            username: userName,
+            userName: userName,
             email: email,
-            role_id: userRole,
+            roleId: userRole,
             password: password,
           })
         ).unwrap();
