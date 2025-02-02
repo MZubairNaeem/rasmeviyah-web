@@ -20,7 +20,7 @@ import MenuItem from "@mui/material/MenuItem";
 
 // images
 import CustomSelect from "@/app/(DashboardLayout)/components/forms/theme-elements/CustomSelect";
-import useAuth from "@/app/auth/useAuth/page";
+// import useAuth from "@/app/auth/useAuth/page";
 import { fetchPermissions } from "@/store/apps/user_management/PermissionsSlice";
 import {
   saveRole,
@@ -41,7 +41,7 @@ const BCrumb = [
   },
 ];
 
-const addRole = () => {
+const AddRole = () => {
   const [roleName, setRoleName] = useState<string>("");
   const [roledescription, setDescription] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
@@ -237,4 +237,4 @@ const addRole = () => {
   );
 };
 
-export default useAuth(addRole);
+export default AddRole;

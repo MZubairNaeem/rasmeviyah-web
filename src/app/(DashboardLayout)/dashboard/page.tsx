@@ -9,7 +9,7 @@ import RecentTransactions from '@/app/(DashboardLayout)/components/dashboard/Rec
 import ProductPerformance from '@/app/(DashboardLayout)/components/dashboard/ProductPerformance';
 import Blog from '@/app/(DashboardLayout)/components/dashboard/Blog';
 import MonthlyEarnings from '@/app/(DashboardLayout)/components/dashboard/MonthlyEarnings';
-import useAuth from '../../auth/useAuth/page'
+// import useAuth from '../../auth/useAuth/page'
 
 
  function Dashboard (){
@@ -46,4 +46,4 @@ import useAuth from '../../auth/useAuth/page'
     </PageContainer>
   )
 }
-export default useAuth(Dashboard);
+export default Dashboard;

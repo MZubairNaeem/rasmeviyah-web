@@ -20,7 +20,7 @@ import MenuItem from '@mui/material/MenuItem';
 
 // images
 import CustomSelect from '@/app/(DashboardLayout)/components/forms/theme-elements/CustomSelect';
-import useAuth from '@/app/auth/useAuth/page';
+// import useAuth from '@/app/auth/useAuth/page';
 import { fetchPermissions } from '@/store/apps/user_management/PermissionsSlice';
 import {
   editRole,
@@ -50,6 +50,7 @@ const EditRole = () => {
 
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
+  const { id: roleId } = useParams<{ id: string }>();
 
   const permissions = useSelector(
     (state: RootState) => state.PermissionsReducer.permissions
@@ -84,7 +85,6 @@ const EditRole = () => {
 
     dispatch(setSelectedPermissions(selectedValues));
   };
-  const { id: roleId } = useParams<{ id: string }>();
 
   const handleEdit = async (event: any) => {
     event.preventDefault();
@@ -266,4 +266,4 @@ const EditRole = () => {
   );
 };
 
-export default useAuth(EditRole);
+export default EditRole;

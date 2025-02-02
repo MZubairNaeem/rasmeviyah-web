@@ -19,7 +19,7 @@ import MenuItem from '@mui/material/MenuItem';
 
 // images
 import CustomSelect from '@/app/(DashboardLayout)/components/forms/theme-elements/CustomSelect';
-import useAuth from '@/app/auth/useAuth/page';
+// import useAuth from '@/app/auth/useAuth/page';
 import { fetchRole } from '@/store/apps/user_management/RoleManagmentSlice';
 import { editUser, fetchUser } from '@/store/apps/user_management/UserSlice';
 import CircularProgress from '@mui/material/CircularProgress/CircularProgress';
@@ -279,4 +279,4 @@ const AddUser = () => {
   );
 };
 
-export default useAuth(AddUser);
+export default AddUser;

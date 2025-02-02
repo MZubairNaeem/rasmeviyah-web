@@ -42,7 +42,7 @@ import { useRouter } from 'next/navigation';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import useAuth from '../../../../../auth/useAuth/page';
+// import useAuth from '../../../../../auth/useAuth/page';
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -571,4 +571,4 @@ const RolesTableList = () => {
   );
 };
 
-export default useAuth(RolesTableList);
+export default RolesTableList;
